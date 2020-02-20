@@ -1,0 +1,81 @@
+@page
+@model ErrorModel
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>500</title>
+    <style>
+        #loader {
+            transition: all 0.3s ease-in-out;
+            opacity: 1;
+            visibility: visible;
+            position: fixed;
+            height: 100vh;
+            width: 100%;
+            background: #fff;
+            z-index: 90000;
+        }
+
+            #loader.fadeOut {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            top: calc(50% - 20px);
+            left: calc(50% - 20px);
+            background-color: #333;
+            border-radius: 100%;
+            -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+            animation: sk-scaleout 1.0s infinite ease-in-out;
+        }
+
+        @@-webkit-keyframes sk-scaleout {
+            0% {
+                -webkit-transform: scale(0)
+            }
+
+            100% {
+                -webkit-transform: scale(1.0);
+                opacity: 0;
+            }
+        }
+
+        @@keyframes sk-scaleout {
+            0% {
+                -webkit-transform: scale(0);
+                transform: scale(0);
+            }
+
+            100% {
+                -webkit-transform: scale(1.0);
+                transform: scale(1.0);
+                opacity: 0;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" type="text/css" />
+</head>
+<body class="app">
+    <div class="pos-a t-0 l-0 bgc-white w-100 h-100 d-f fxd-r fxw-w ai-c jc-c pos-r p-30">
+        <div class="mR-60">
+            <img alt="#" src="/images/500.png" />
+        </div>
+
+        <div class="d-f jc-c fxd-c">
+            <h1 class="mB-30 fw-900 lh-1 c-red-500" style="font-size: 60px;">500</h1>
+            <h3 class="mB-10 fsz-lg c-grey-900 tt-c">Down for Maintenance</h3>
+            <p class="mB-30 fsz-def c-grey-700">We're just doing some work on the server, please try again later.</p>
+        </div>
+    </div>
+</body>
+</html>
