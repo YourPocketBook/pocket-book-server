@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -9,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Identity.Web.Resource;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PocketBookServer.Controllers.API;
@@ -51,54 +55,8 @@ namespace PocketBookServer
             {
                 var context = serviceScope.ServiceProvider.GetService<ApplicationDataContext>();
                 context.Database.Migrate();
-
-                var roleManager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
-                if (roleManager.FindByNameAsync("Admin").Result == null)
-                {
-                    var adminRole = new IdentityRole
-                    {
-                        Name = "Admin"
-                    };
-                    roleManager.CreateAsync(adminRole).Wait();
-                    roleManager.AddClaimAsync(adminRole, new Claim("role", "Admin")).Wait();
-                }
-
-                var userManager = serviceScope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
-                if (userManager.FindByEmailAsync("tony.richards@sja.org.uk").Result == null)
-                {
-                    var user = new ApplicationUser
-                    {
-                        Email = Configuration["AdminUser:UserName"],
-                        EmailConfirmed = true,
-                        RealName = Configuration["AdminUser:RealName"],
-                        UserName = Configuration["AdminUser:UserName"],
-                        UpdateEmailConsentGiven = true
-                    };
-                    userManager.CreateAsync(user, Configuration["AdminUser:Password"]).Wait();
-                }
-                var adminUser = userManager.FindByEmailAsync("tony.richards@sja.org.uk").Result;
-                if (!userManager.IsInRoleAsync(adminUser, "Admin").Result)
-                {
-                    userManager.AddToRoleAsync(adminUser, "Admin").Wait();
-                }
             }
 
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var manager = serviceScope.ServiceProvider.GetService<RoleManager<IdentityRole>>();
-
-                if (!manager.RoleExistsAsync("Admin").GetAwaiter().GetResult())
-                {
-                    var role = new IdentityRole()
-                    {
-                        Name = "Admin"
-                    };
-                    manager.CreateAsync(role).GetAwaiter().GetResult();
-                    manager.AddClaimAsync(role, new Claim("role", "Admin")).GetAwaiter().GetResult();
-                }
-            }
-
-            app.UseRouting();
             app.UseRouter(r =>
             {
                 r.MapGet(".well-known/acme-challenge/{id}", async (request, response, routeData) =>
@@ -110,8 +68,6 @@ namespace PocketBookServer
             });
 
             app.UseHttpsRedirection();
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             var cacheLength = env.IsDevelopment() ? "600" : "604800";
 
@@ -128,6 +84,11 @@ namespace PocketBookServer
                 }
             });
 
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.MapWhen(x => !x.Request.Path.Value.StartsWith("/api"), builder =>
             {
                 app.UseSwagger();
@@ -142,56 +103,45 @@ namespace PocketBookServer
             app.UseEndpoints(builder =>
             {
                 builder.MapDefaultControllerRoute();
+                builder.MapHealthChecks("/health");
             });
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDataContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddApplicationInsightsTelemetry();
-
             services.AddDataProtection()
                .SetApplicationName($"pocketbook-{_env.EnvironmentName}")
                .PersistKeysToFileSystem(new DirectoryInfo($@"{_env.ContentRootPath}\..\local_keys"));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>(o =>
-                {
-                    o.User.RequireUniqueEmail = true;
-                    o.SignIn.RequireConfirmedEmail = true;
-                    o.Password.RequireDigit = false;
-                    o.Password.RequireLowercase = false;
-                    o.Password.RequireNonAlphanumeric = false;
-                    o.Password.RequireUppercase = false;
-                    o.Password.RequiredLength = 1;
-                })
-                .AddEntityFrameworkStores<ApplicationDataContext>()
-                .AddDefaultTokenProviders();
+            services.AddDbContext<ApplicationDataContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddAuthentication(x =>
+            services.AddAuthentication(AzureADDefaults.BearerAuthenticationScheme)
+                .AddAzureADBearer(o =>
                 {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(x =>
-                {
-                    var key = Encoding.ASCII.GetBytes(Configuration["TokenSecret"]);
-
-                    if (_env.IsDevelopment())
-                        x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidAudience = Configuration["TokenAudience"],
-                        ValidIssuer = Configuration["TokenIssuer"]
-                    };
+                    Configuration.Bind("AzureAd", o);
                 });
+
+            services.Configure<JwtBearerOptions>(AzureADDefaults.JwtBearerAuthenticationScheme, options =>
+            {
+                // This is a Microsoft identity platform web API.
+                options.Authority += "/v2.0";
+
+                // The valid audiences are both the Client ID (options.Audience) and api://{ClientID}
+                options.TokenValidationParameters.ValidAudiences = new string[]
+                {
+                    options.Audience, $"api://{options.Audience}"
+                };
+
+                options.TokenValidationParameters.IssuerValidator = AadIssuerValidator.GetIssuerValidator(options.Authority).Validate;
+            });
+
+            IdentityModelEventSource.ShowPII = true;
+
+            services.AddApplicationInsightsTelemetry();
+
+            services.AddControllers();
 
             services.AddHsts(o =>
             {
@@ -200,12 +150,12 @@ namespace PocketBookServer
                 o.MaxAge = TimeSpan.FromSeconds(63072000);
             });
 
+            services.AddHealthChecks();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PocketBook Server", Version = "v1" });
             });
-
-            services.AddControllers();
 
             var emailOptions = Configuration.Get<EmailSenderOptions>();
 
