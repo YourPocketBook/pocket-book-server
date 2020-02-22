@@ -5,7 +5,6 @@ namespace PocketBookServer.Models
     [JsonConverter(typeof(RequestErrorConverter))]
     public enum RequestErrorType
     {
-        EmailNotConfirmed,
         IsBlank,
         IsInUse,
         IsInvalid

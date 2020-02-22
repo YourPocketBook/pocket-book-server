@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PocketBookServer.Models;
 
 namespace PocketBookServer.Data
 {
-    public class ApplicationDataContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDataContext : DbContext
     {
         public ApplicationDataContext()
         {

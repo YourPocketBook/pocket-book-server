@@ -47,7 +47,7 @@ namespace Microsoft.Identity.Web.Resource
             if (string.IsNullOrEmpty(aadAuthority))
                 throw new ArgumentNullException(nameof(aadAuthority));
 
-            if (s_issuerValidators.TryGetValue(aadAuthority, out AadIssuerValidator aadIssuerValidator))
+            if (s_issuerValidators.TryGetValue(aadAuthority, out var aadIssuerValidator))
             {
                 return aadIssuerValidator;
             }
@@ -67,7 +67,7 @@ namespace Microsoft.Identity.Web.Resource
                 }
 
                 // Add issuer aliases of the chosen authority
-                string authority = authorityHost ?? new Uri(FallbackAuthority).Host;
+                var authority = authorityHost ?? new Uri(FallbackAuthority).Host;
                 var aliases = issuerMetadata.Metadata
                     .Where(m => m.Aliases.Any(a => string.Equals(a, authority, StringComparison.OrdinalIgnoreCase)))
                     .SelectMany(m => m.Aliases)
@@ -103,7 +103,7 @@ namespace Microsoft.Identity.Web.Resource
             if (validationParameters == null)
                 throw new ArgumentNullException(nameof(validationParameters));
 
-            string tenantId = GetTenantIdFromToken(securityToken);
+            var tenantId = GetTenantIdFromToken(securityToken);
             if (string.IsNullOrWhiteSpace(tenantId))
                 throw new SecurityTokenInvalidIssuerException("Neither `tid` nor `tenantId` claim is present in the token obtained from Microsoft identity platform.");
 
@@ -128,7 +128,7 @@ namespace Microsoft.Identity.Web.Resource
         {
             if (securityToken is JwtSecurityToken jwtSecurityToken)
             {
-                if (jwtSecurityToken.Payload.TryGetValue(ClaimConstants.Tid, out object tenantId))
+                if (jwtSecurityToken.Payload.TryGetValue(ClaimConstants.Tid, out var tenantId))
                     return tenantId as string;
             }
 
@@ -145,7 +145,7 @@ namespace Microsoft.Identity.Web.Resource
 
         private static bool IsValidTidInLocalPath(string tenantId, Uri uri)
         {
-            string trimmedLocalPath = uri.LocalPath.Trim('/');
+            var trimmedLocalPath = uri.LocalPath.Trim('/');
             return trimmedLocalPath == tenantId || trimmedLocalPath == $"{tenantId}/v2.0";
         }
 

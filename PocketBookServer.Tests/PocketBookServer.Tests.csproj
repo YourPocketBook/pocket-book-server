@@ -24,4 +24,8 @@
     <ProjectReference Include="..\PocketBookServer\PocketBookServer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

@@ -12,7 +12,6 @@ namespace PocketBookServer.Models
 
             return enumString switch
             {
-                "emailNotConfirmed" => RequestErrorType.EmailNotConfirmed,
                 "isBlank" => RequestErrorType.IsBlank,
                 "isInvalid" => RequestErrorType.IsInvalid,
                 "isInUse" => RequestErrorType.IsInUse,
@@ -24,10 +23,6 @@ namespace PocketBookServer.Models
         {
             switch (value)
             {
-                case RequestErrorType.EmailNotConfirmed:
-                    writer.WriteStringValue("emailNotConfirmed");
-                    break;
-
                 case RequestErrorType.IsBlank:
                     writer.WriteStringValue("isBlank");
                     break;

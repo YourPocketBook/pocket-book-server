@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,17 +12,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web.Resource;
 using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PocketBookServer.Controllers.API;
 using PocketBookServer.Data;
-using PocketBookServer.Models;
-using PocketBookServer.Services;
-using SendGrid;
 using System;
 using System.IO;
-using System.Security.Claims;
-using System.Text;
 
 namespace PocketBookServer
 {
@@ -156,15 +148,6 @@ namespace PocketBookServer
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PocketBook Server", Version = "v1" });
             });
-
-            var emailOptions = Configuration.Get<EmailSenderOptions>();
-
-            services.AddTransient<ISendGridClient>(sp => new SendGridClient(emailOptions.SendGridKey));
-            services.AddTransient<ITokenGenerator, TokenGenerator>();
-            services.AddSingleton<IEmailSender, EmailSender>();
-            services.Configure<TokenGeneratorOptions>(Configuration);
-            services.Configure<EmailSenderOptions>(Configuration);
-            services.Configure<UserControllerOptions>(Configuration);
         }
     }
 }

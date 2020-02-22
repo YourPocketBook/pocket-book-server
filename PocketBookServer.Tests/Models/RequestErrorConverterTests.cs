@@ -12,9 +12,7 @@ namespace PocketBookServer.Tests.Models
 
     public class RequestErrorConverterTests
     {
-        [Theory, InlineData(RequestErrorType.EmailNotConfirmed, "emailNotConfirmed"),
-            InlineData(RequestErrorType.IsBlank, "isBlank"),
-            InlineData(RequestErrorType.IsInvalid, "isInvalid"),
+        [Theory, InlineData(RequestErrorType.IsBlank, "isBlank"), InlineData(RequestErrorType.IsInvalid, "isInvalid"),
             InlineData(RequestErrorType.IsInUse, "isInUse")]
         public void ConvertsToEnumCorrectly(RequestErrorType errorType, string input)
         {
@@ -24,9 +22,7 @@ namespace PocketBookServer.Tests.Models
             result.Error.Should().Be(errorType);
         }
 
-        [Theory, InlineData(RequestErrorType.EmailNotConfirmed, "emailNotConfirmed"),
-                    InlineData(RequestErrorType.IsBlank, "isBlank"),
-            InlineData(RequestErrorType.IsInvalid, "isInvalid"),
+        [Theory, InlineData(RequestErrorType.IsBlank, "isBlank"), InlineData(RequestErrorType.IsInvalid, "isInvalid"),
             InlineData(RequestErrorType.IsInUse, "isInUse")]
         public void ConvertsToStringCorrectly(RequestErrorType errorType, string expected)
         {
