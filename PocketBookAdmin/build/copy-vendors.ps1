@@ -9,3 +9,6 @@ cp node_modules/@coreui/icons/sprites/*.svg wwwroot/vendors/coreui/icons/sprites
 
 mkdir wwwroot/vendors/coreui/icons/js/
 cp node_modules/@coreui/icons/js/svgxuse.* wwwroot/vendors/coreui/icons/js/
+
+mkdir wwwroot/vendors/coreui/utils/
+cp node_modules/@coreui/utils/dist/coreui-utils.* wwwroot/vendors/coreui/utils/
