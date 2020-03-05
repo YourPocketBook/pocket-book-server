@@ -9,4 +9,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.2" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PocketBookModel\PocketBookModel.csproj" />
+  </ItemGroup>
 </Project>

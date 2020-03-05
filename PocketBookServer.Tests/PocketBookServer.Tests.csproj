@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PocketBookModel\PocketBookModel.csproj" />
     <ProjectReference Include="..\PocketBookServer\PocketBookServer.csproj" />
   </ItemGroup>
 
