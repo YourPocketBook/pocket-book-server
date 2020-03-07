@@ -44,12 +44,42 @@ namespace PocketBookServer.Models
         [Required(AllowEmptyStrings = false)]
         public string SideEffects { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Medication other))
+                return false;
+
+            return AdviceIfDeclined.Equals(other.AdviceIfDeclined)
+                && AdviceIfTaken.Equals(other.AdviceIfTaken)
+                && Dose.Equals(other.Dose)
+                && ExclusionCriteria.Equals(other.ExclusionCriteria)
+                && Form.Equals(other.Form)
+                && Id == other.Id
+                && InclusionCriteria.Equals(other.InclusionCriteria)
+                && Indications.Equals(other.Indications)
+                && LastModified.Equals(other.LastModified)
+                && Name.Equals(other.Name)
+                && PolicyDate == other.PolicyDate
+                && Route.Equals(other.Route)
+                && SideEffects.Equals(other.SideEffects);
+        }
+
         public string GetEtag()
         {
             using var hasher = MD5.Create();
             var bytes = Encoding.UTF8.GetBytes($"{Id}.{Name}.{LastModified.ToString("s")}");
             var hash = hasher.ComputeHash(bytes);
             return Convert.ToBase64String(hash);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id;
+        }
+
+        public override string ToString()
+        {
+            return $"{Id} : {Name}";
         }
     }
 }
