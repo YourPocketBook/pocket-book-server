@@ -23,47 +23,6 @@ namespace PocketBookServer.Controllers.API
             _dataContext = dataContext;
         }
 
-        [HttpPost("/api/add-medication"), Authorize(Roles = "Admin"),
-         ProducesResponseType(typeof(IEnumerable<RequestError>), 400),
-         ProducesResponseType(201)]
-        public async Task<IActionResult> AddMedication(
-            [FromBody,
-             Bind("AdviceIfDeclined", "AdviceIfTaken", "Dose", "ExclusionCriteria", "Form", "InclusionCriteria",
-                 "Indications", "Name", "Route", "SideEffects")]
-            Medication medication)
-        {
-            var errors = new List<RequestError>();
-
-            errors.AddRange(ValidateMedication(medication));
-
-            if (await _dataContext.Medications.AnyAsync(m => m.Name == medication.Name))
-                errors.Add(new RequestError { Error = RequestErrorType.IsInUse, Path = "name" });
-
-            if (errors.Any())
-                return BadRequest(errors);
-
-            medication.LastModified = DateTimeOffset.UtcNow;
-
-            _dataContext.Medications.Add(medication);
-            await _dataContext.SaveChangesAsync();
-
-            return Created($"/api/get-medication/{medication.Id}", medication);
-        }
-
-        [HttpDelete("/api/delete-medication/{id}"), Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteMedication([FromRoute]int id)
-        {
-            var item = await _dataContext.Medications.FirstOrDefaultAsync(m => m.Id == id);
-
-            if (item != null)
-            {
-                _dataContext.Medications.Remove(item);
-                await _dataContext.SaveChangesAsync();
-            }
-
-            return NoContent();
-        }
-
         [HttpGet("/api/get-medications"), ProducesResponseType(typeof(IEnumerable<MedicationSummary>), 200)]
         public Task<IActionResult> GetAllMedications()
         {
@@ -98,59 +57,6 @@ namespace PocketBookServer.Controllers.API
             Response.Headers["Last-Modified"] = item.LastModified.ToUniversalTime().ToString(LastModifiedFormat);
 
             return Ok(item);
-        }
-
-        [HttpPut("/api/update-medication/{id}"), Authorize(Roles = "Admin"),
-                                            ProducesResponseType(typeof(IEnumerable<RequestError>), 400),
-            ProducesResponseType(200), ProducesResponseType(404)]
-        public async Task<IActionResult> UpdateMedication([FromRoute]int id, [FromBody, Bind("AdviceIfDeclined", "AdviceIfTaken", "Dose", "ExclusionCriteria", "Form", "InclusionCriteria",
-                 "Indications", "Name", "Route", "SideEffects")] Medication medication)
-        {
-            var errors = new List<RequestError>();
-
-            errors.AddRange(ValidateMedication(medication));
-
-            if (await _dataContext.Medications.AnyAsync(m => m.Name == medication.Name && m.Id != id))
-                errors.Add(new RequestError { Error = RequestErrorType.IsInUse, Path = "name" });
-
-            if (errors.Any())
-                return BadRequest(errors);
-
-            if (!_dataContext.Medications.AsNoTracking().Any(m => m.Id == id))
-                return NotFound();
-
-            medication.Id = id;
-            medication.LastModified = DateTimeOffset.UtcNow;
-
-            _dataContext.Medications.Update(medication);
-
-            await _dataContext.SaveChangesAsync();
-
-            return Ok(medication);
-        }
-
-        private static IEnumerable<RequestError> ValidateMedication(Medication medication)
-        {
-            if (string.IsNullOrWhiteSpace(medication.AdviceIfDeclined))
-                yield return new RequestError { Error = RequestErrorType.IsBlank, Path = "adviceIfDeclined" };
-            if (string.IsNullOrWhiteSpace(medication.AdviceIfTaken))
-                yield return new RequestError { Error = RequestErrorType.IsBlank, Path = "adviceIfTaken" };
-            if (string.IsNullOrWhiteSpace(medication.Dose))
-                yield return new RequestError { Error = RequestErrorType.IsBlank, Path = "dose" };
-            if (string.IsNullOrWhiteSpace(medication.ExclusionCriteria))
-                yield return new RequestError { Error = RequestErrorType.IsBlank, Path = "exclusionCriteria" };
-            if (string.IsNullOrWhiteSpace(medication.Form))
-                yield return new RequestError { Error = RequestErrorType.IsBlank, Path = "form" };
-            if (string.IsNullOrWhiteSpace(medication.InclusionCriteria))
-                yield return new RequestError { Error = RequestErrorType.IsBlank, Path = "inclusionCriteria" };
-            if (string.IsNullOrWhiteSpace(medication.Indications))
-                yield return new RequestError { Error = RequestErrorType.IsBlank, Path = "indications" };
-            if (string.IsNullOrWhiteSpace(medication.Name))
-                yield return new RequestError { Error = RequestErrorType.IsBlank, Path = "name" };
-            if (string.IsNullOrWhiteSpace(medication.Route))
-                yield return new RequestError { Error = RequestErrorType.IsBlank, Path = "route" };
-            if (string.IsNullOrWhiteSpace(medication.SideEffects))
-                yield return new RequestError { Error = RequestErrorType.IsBlank, Path = "sideEffects" };
         }
     }
 }
