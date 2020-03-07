@@ -129,8 +129,6 @@ namespace PocketBookServer
                 options.TokenValidationParameters.IssuerValidator = AadIssuerValidator.GetIssuerValidator(options.Authority).Validate;
             });
 
-            IdentityModelEventSource.ShowPII = true;
-
             services.AddApplicationInsightsTelemetry();
 
             services.AddControllers();
