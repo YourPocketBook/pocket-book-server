@@ -14,5 +14,14 @@ namespace PocketBookServer.Data
         }
 
         public DbSet<Medication> Medications { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Medication>()
+                .HasIndex(m => m.Name)
+                .IsUnique();
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
