@@ -1,4 +1,5 @@
-﻿using PocketBookServer.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PocketBookServer.Data;
 using PocketBookServer.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ namespace PocketBookModel.Services
     public interface IMedicationService
     {
         Task AddAsync(Medication medication);
+
+        Task<bool> CheckMedicationName(string name);
 
         Task DeleteAsync(int id);
 
@@ -37,6 +40,11 @@ namespace PocketBookModel.Services
             return _dataContext.SaveChangesAsync();
         }
 
+        public async Task<bool> CheckMedicationName(string name)
+        {
+            return !(await _dataContext.Medications.AnyAsync(m => m.Name == name));
+        }
+
         public async Task DeleteAsync(int id)
         {
             var item = await _dataContext.Medications.FindAsync(id);
@@ -60,8 +68,8 @@ namespace PocketBookModel.Services
 
         public Task UpdateAsync(Medication medication)
         {
+            medication.LastModified = DateTimeOffset.UtcNow;
             _dataContext.Medications.Update(medication);
-
             return _dataContext.SaveChangesAsync();
         }
     }
