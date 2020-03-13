@@ -13,7 +13,7 @@ namespace PocketBookModel.Services
     {
         Task AddAsync(Medication medication);
 
-        Task<bool> CheckMedicationName(string name);
+        Task<bool> CheckMedicationName(string name, int? id);
 
         Task DeleteAsync(int id);
 
@@ -40,9 +40,9 @@ namespace PocketBookModel.Services
             return _dataContext.SaveChangesAsync();
         }
 
-        public async Task<bool> CheckMedicationName(string name)
+        public async Task<bool> CheckMedicationName(string name, int? id)
         {
-            return !(await _dataContext.Medications.AnyAsync(m => m.Name == name));
+            return !(await _dataContext.Medications.AnyAsync(m => m.Name == name && (id == null || m.Id != id)));
         }
 
         public async Task DeleteAsync(int id)
