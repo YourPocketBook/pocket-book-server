@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using PocketBookAdmin.Controllers;
 using PocketBookAdmin.ViewModels;
+using PocketBookModel;
 using PocketBookModel.Services;
-using PocketBookServer.Models;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -88,7 +88,7 @@ namespace PocketBookAdmin.Tests
         {
             var testItem = _fixture.Create<EditMedication>();
             var service = new Mock<IMedicationService>();
-            service.Setup(m => m.CheckMedicationName(testItem.Name)).Returns(Task.FromResult(true));
+            service.Setup(m => m.CheckMedicationName(testItem.Name, null)).Returns(Task.FromResult(true));
             service.Setup(m => m.AddAsync(testItem)).Returns(Task.CompletedTask);
 
             var controller = new MedicationsController(service.Object);
@@ -106,7 +106,7 @@ namespace PocketBookAdmin.Tests
         {
             var testItem = _fixture.Create<EditMedication>();
             var service = new Mock<IMedicationService>();
-            service.Setup(m => m.CheckMedicationName(testItem.Name)).Returns(Task.FromResult(true));
+            service.Setup(m => m.CheckMedicationName(testItem.Name, null)).Returns(Task.FromResult(true));
 
             var controller = new MedicationsController(service.Object);
             controller.ModelState.AddModelError("", "Test Error");
@@ -121,7 +121,7 @@ namespace PocketBookAdmin.Tests
         {
             var testItem = _fixture.Create<EditMedication>();
             var service = new Mock<IMedicationService>();
-            service.Setup(m => m.CheckMedicationName(testItem.Name)).Returns(Task.FromResult(false));
+            service.Setup(m => m.CheckMedicationName(testItem.Name, null)).Returns(Task.FromResult(false));
 
             var controller = new MedicationsController(service.Object);
 
@@ -156,7 +156,7 @@ namespace PocketBookAdmin.Tests
             testModel.Id = testId;
 
             var service = new Mock<IMedicationService>();
-            service.Setup(m => m.CheckMedicationName(testItem.Name)).Returns(Task.FromResult(true));
+            service.Setup(m => m.CheckMedicationName(testItem.Name, testId)).Returns(Task.FromResult(true));
             service.Setup(m => m.UpdateAsync(testModel)).Returns(Task.CompletedTask);
 
             var controller = new MedicationsController(service.Object);
@@ -175,7 +175,7 @@ namespace PocketBookAdmin.Tests
             var testId = 42;
             var testItem = _fixture.Create<EditMedication>();
             var service = new Mock<IMedicationService>();
-            service.Setup(m => m.CheckMedicationName(testItem.Name)).Returns(Task.FromResult(true));
+            service.Setup(m => m.CheckMedicationName(testItem.Name, testId)).Returns(Task.FromResult(true));
 
             var controller = new MedicationsController(service.Object);
             controller.ModelState.AddModelError("", "Test Error");
@@ -191,7 +191,7 @@ namespace PocketBookAdmin.Tests
             var testId = 42;
             var testItem = _fixture.Create<EditMedication>();
             var service = new Mock<IMedicationService>();
-            service.Setup(m => m.CheckMedicationName(testItem.Name)).Returns(Task.FromResult(false));
+            service.Setup(m => m.CheckMedicationName(testItem.Name, testId)).Returns(Task.FromResult(false));
 
             var controller = new MedicationsController(service.Object);
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PocketBookServer.Data;
+using PocketBookModel;
 using PocketBookServer.Models;
 using System;
 using System.Collections.Generic;

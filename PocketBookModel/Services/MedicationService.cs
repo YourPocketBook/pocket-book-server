@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PocketBookServer.Data;
-using PocketBookServer.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PocketBookModel.Services
@@ -13,7 +9,7 @@ namespace PocketBookModel.Services
     {
         Task AddAsync(Medication medication);
 
-        Task<bool> CheckMedicationName(string name, int? id);
+        Task<bool> CheckMedicationName(string name, int? id = null);
 
         Task DeleteAsync(int id);
 
@@ -40,7 +36,7 @@ namespace PocketBookModel.Services
             return _dataContext.SaveChangesAsync();
         }
 
-        public async Task<bool> CheckMedicationName(string name, int? id)
+        public async Task<bool> CheckMedicationName(string name, int? id = null)
         {
             return !(await _dataContext.Medications.AnyAsync(m => m.Name == name && (id == null || m.Id != id)));
         }
