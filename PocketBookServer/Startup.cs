@@ -11,9 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Identity.Web.Resource;
-using Microsoft.IdentityModel.Logging;
 using Microsoft.OpenApi.Models;
-using PocketBookServer.Data;
+using PocketBookModel;
 using System;
 using System.IO;
 

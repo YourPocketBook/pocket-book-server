@@ -1,5 +1,6 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using PocketBookModel;
 using PocketBookServer.Models;
 using Xunit;
 

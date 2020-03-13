@@ -1,8 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PocketBookAdmin.ViewModels;
+using PocketBookModel;
 using PocketBookModel.Services;
-using PocketBookServer.Models;
+using System.Threading.Tasks;
 
 namespace PocketBookAdmin.Controllers
 {
@@ -79,7 +79,7 @@ namespace PocketBookAdmin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, EditMedication model)
         {
-            if (!await _service.CheckMedicationName(model.Name))
+            if (!await _service.CheckMedicationName(model.Name, id))
                 ModelState.AddModelError("name", "That name is already in use.");
 
             if (ModelState.IsValid)

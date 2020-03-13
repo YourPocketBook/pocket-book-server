@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using PocketBookServer.Data;
+using PocketBookModel;
+using PocketBookModel.Services;
+using System;
+using System.IO;
 
 namespace PocketBookAdmin
 {
@@ -81,6 +82,8 @@ namespace PocketBookAdmin
                 .AddAzureAD(options => Configuration.Bind("AzureAd", options));
 
             services.AddApplicationInsightsTelemetry();
+
+            services.AddTransient<IMedicationService, MedicationService>();
 
             services.AddControllersWithViews(options =>
             {

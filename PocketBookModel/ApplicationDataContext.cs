@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PocketBookServer.Models;
 
-namespace PocketBookServer.Data
+namespace PocketBookModel
 {
     public class ApplicationDataContext : DbContext
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PocketBookModel;
+using System;
 
 namespace PocketBookServer.Models
 {

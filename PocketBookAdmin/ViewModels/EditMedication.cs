@@ -1,4 +1,4 @@
-﻿using PocketBookServer.Models;
+﻿using PocketBookModel;
 using System;
 using System.ComponentModel.DataAnnotations;
 

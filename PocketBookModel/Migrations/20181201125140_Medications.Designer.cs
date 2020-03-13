@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PocketBookServer.Data;
 
-namespace PocketBookServer.Migrations
+namespace PocketBookModel.Migrations
 {
     [DbContext(typeof(ApplicationDataContext))]
     [Migration("20181201125140_Medications")]
@@ -186,7 +184,7 @@ namespace PocketBookServer.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("PocketBookServer.Models.Medication", b =>
+            modelBuilder.Entity("PocketBookModel.Medication", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

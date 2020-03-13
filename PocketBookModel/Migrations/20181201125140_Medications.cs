@@ -1,10 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace PocketBookServer.Migrations
+namespace PocketBookModel.Migrations
 {
     public partial class Medications : Migration
     {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Medications");
+        }
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -28,12 +34,6 @@ namespace PocketBookServer.Migrations
                 {
                     table.PrimaryKey("PK_Medications", x => x.Id);
                 });
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "Medications");
         }
     }
 }

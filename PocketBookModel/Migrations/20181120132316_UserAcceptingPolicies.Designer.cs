@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PocketBookServer.Data;
 
-namespace PocketBookServer.Migrations
+namespace PocketBookModel.Migrations
 {
     [DbContext(typeof(ApplicationDataContext))]
     [Migration("20181120132316_UserAcceptingPolicies")]
