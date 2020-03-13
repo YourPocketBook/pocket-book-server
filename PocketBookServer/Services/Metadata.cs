@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Microsoft.Identity.Web.InstanceDiscovery
 {
@@ -12,10 +12,10 @@ namespace Microsoft.Identity.Web.InstanceDiscovery
     internal class Metadata
     {
         /// <summary>
-        /// Preferred alias
+        /// Aliases of issuer URLs which are equivalent
         /// </summary>
-        [JsonProperty(PropertyName = "preferred_network")]
-        public string PreferredNetwork { get; set; }
+        [JsonProperty(PropertyName = "aliases")]
+        public List<string> Aliases { get; set; }
 
         /// <summary>
         /// Preferred alias to cache tokens emitted by one of the aliases (to avoid
@@ -25,9 +25,9 @@ namespace Microsoft.Identity.Web.InstanceDiscovery
         public string PreferredCache { get; set; }
 
         /// <summary>
-        /// Aliases of issuer URLs which are equivalent
+        /// Preferred alias
         /// </summary>
-        [JsonProperty(PropertyName = "aliases")]
-        public List<string> Aliases { get; set; }
+        [JsonProperty(PropertyName = "preferred_network")]
+        public string PreferredNetwork { get; set; }
     }
 }

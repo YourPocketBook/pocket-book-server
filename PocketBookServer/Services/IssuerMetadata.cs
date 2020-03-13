@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Microsoft.Identity.Web.InstanceDiscovery
 {
@@ -11,12 +11,6 @@ namespace Microsoft.Identity.Web.InstanceDiscovery
     /// </summary>
     internal class IssuerMetadata
     {
-        /// <summary>
-        /// Tenant discovery endpoint
-        /// </summary>
-        [JsonProperty(PropertyName = "tenant_discovery_endpoint")]
-        public string TenantDiscoveryEndpoint { get; set; }
-
         /// <summary>
         /// API Version
         /// </summary>
@@ -28,5 +22,11 @@ namespace Microsoft.Identity.Web.InstanceDiscovery
         /// </summary>
         [JsonProperty(PropertyName = "metadata")]
         public List<Metadata> Metadata { get; set; }
+
+        /// <summary>
+        /// Tenant discovery endpoint
+        /// </summary>
+        [JsonProperty(PropertyName = "tenant_discovery_endpoint")]
+        public string TenantDiscoveryEndpoint { get; set; }
     }
 }

@@ -1,5 +1,3 @@
-using System;
-
 namespace PocketBookAdmin.Models
 {
     public class ErrorViewModel
