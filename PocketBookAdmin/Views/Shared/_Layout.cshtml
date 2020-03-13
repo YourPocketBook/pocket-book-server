@@ -54,10 +54,17 @@
         </div>
         <ul class="c-sidebar-nav">
             <li class="c-sidebar-nav-item">
-                <a class="c-sidebar-nav-link" href="index.html">
+                <a class="c-sidebar-nav-link" asp-controller="Home" asp-action="Index">
                     <svg class="c-sidebar-nav-icon">
                         <use xlink:href="/vendors/coreui/icons/sprites/free.svg#cil-speedometer"></use>
                     </svg> Dashboard
+                </a>
+            </li>
+            <li class="c-sidebar-nav-item">
+                <a class="c-sidebar-nav-link" asp-controller="Medications" asp-action="Index">
+                    <svg class="c-sidebar-nav-icon">
+                        <use xlink:href="/vendors/coreui/icons/sprites/free.svg#cil-notes"></use>
+                    </svg> Medications
                 </a>
             </li>
         </ul>
