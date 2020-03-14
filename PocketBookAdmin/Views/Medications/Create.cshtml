@@ -1,0 +1,100 @@
+﻿@model PocketBookAdmin.ViewModels.EditMedication
+
+@{
+    string action;
+
+    if (ViewBag.EditMode)
+    {
+        ViewData["Title"] = "Edit Medication";
+        action = "Edit";
+    }
+    else
+    {
+        ViewData["Title"] = "Create Medication";
+        action = "Create";
+    }
+}
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header font-weight-bold">@ViewData["Title"]</div>
+            <div class="card-body">
+                <form method="post" asp-action="@action" asp-route-id="@ViewBag.Id">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Indications" class="control-label"></label>
+                        <textarea asp-for="Indications" class="form-control"></textarea>
+                        <span asp-validation-for="Indications" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="InclusionCriteria" class="control-label">Inclusion Criteria</label>
+                        <textarea asp-for="InclusionCriteria" class="form-control"></textarea>
+                        <span asp-validation-for="InclusionCriteria" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ExclusionCriteria" class="control-label">Exclusion Criteria</label>
+                        <textarea asp-for="ExclusionCriteria" class="form-control"></textarea>
+                        <span asp-validation-for="ExclusionCriteria" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Form" class="control-label">Name, Form and Strength</label>
+                        <textarea asp-for="Form" class="form-control"></textarea>
+                        <span asp-validation-for="Form" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Route" class="control-label">Route or Method</label>
+                        <textarea asp-for="Route" class="form-control"></textarea>
+                        <span asp-validation-for="Route" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Dose" class="control-label">Dosage</label>
+                        <textarea asp-for="Dose" class="form-control"></textarea>
+                        <span asp-validation-for="Dose" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="SideEffects" class="control-label">Side Effects</label>
+                        <textarea asp-for="SideEffects" class="form-control"></textarea>
+                        <span asp-validation-for="SideEffects" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AdviceIfTaken" class="control-label">Advice if Taken</label>
+                        <textarea asp-for="AdviceIfTaken" class="form-control"></textarea>
+                        <span asp-validation-for="AdviceIfTaken" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AdviceIfDeclined" class="control-label">Advice if Declined</label>
+                        <textarea asp-for="AdviceIfDeclined" class="form-control"></textarea>
+                        <span asp-validation-for="AdviceIfDeclined" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PolicyDate" class="control-label">Policy Date</label>
+                        <input asp-for="PolicyDate" class="form-control" />
+                        <span asp-validation-for="PolicyDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="btn-group">
+                            <input type="submit" value="Preview" class="btn btn-primary" />
+                            <a asp-action="Index" class="btn btn-danger">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+@section Breadcrumb {
+    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Medications">Medications</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+}

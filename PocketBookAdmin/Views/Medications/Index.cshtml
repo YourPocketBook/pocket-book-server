@@ -1,19 +1,18 @@
 ﻿@model IEnumerable<PocketBookModel.Medication>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Medications";
 }
 
-<h1>Index</h1>
 <div class="row">
     <div class="col-lg-6">
         <div class="card">
-            <div class="card-header"><i class="fa fa-align-justify"></i> Simple Table</div>
+            <div class="card-header font-weight-bold">@ViewData["Title"]</div>
             <div class="card-body">
                 <p>
                     <a asp-action="Create">Create New</a>
                 </p>
-                <table class="table">
+                <table class="table table-responsive">
                     <thead>
                         <tr>
                             <th>
@@ -36,10 +35,12 @@
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.PolicyDate)
+                                    @item.PolicyDate?.ToString("dd MMM yyyy")
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.LastModified)
+                                    <time class="timeago" datetime="@item.LastModified.ToString("o")">
+                                        @item.LastModified.ToString("dd MMM yyyy HH:mm")
+                                    </time>
                                 </td>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
@@ -54,3 +55,17 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/vendors/timeago/timeago.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            timeago.render(document.querySelectorAll(".timeago"));
+        })
+    </script>
+}
+
+@section Breadcrumb {
+    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+}

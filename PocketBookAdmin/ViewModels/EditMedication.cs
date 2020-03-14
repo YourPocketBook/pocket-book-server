@@ -39,6 +39,24 @@ namespace PocketBookAdmin.ViewModels
         [Required(AllowEmptyStrings = false)]
         public string SideEffects { get; set; }
 
+        public static implicit operator EditMedication(Medication medication)
+        {
+            return new EditMedication
+            {
+                AdviceIfDeclined = medication.AdviceIfDeclined,
+                AdviceIfTaken = medication.AdviceIfTaken,
+                Dose = medication.Dose,
+                ExclusionCriteria = medication.ExclusionCriteria,
+                Form = medication.Form,
+                InclusionCriteria = medication.InclusionCriteria,
+                Indications = medication.Indications,
+                Name = medication.Name,
+                PolicyDate = medication.PolicyDate,
+                Route = medication.Route,
+                SideEffects = medication.SideEffects
+            };
+        }
+
         public static implicit operator Medication(EditMedication createMedication)
         {
             return new Medication

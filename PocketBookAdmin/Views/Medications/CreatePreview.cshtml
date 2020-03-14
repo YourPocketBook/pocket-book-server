@@ -1,0 +1,83 @@
+﻿@model PocketBookAdmin.ViewModels.EditMedication
+@using Westwind.AspNetCore.Markdown
+
+@{
+    string action;
+    string previousAction;
+
+    if (ViewBag.EditMode)
+    {
+        ViewData["Title"] = "Edit Medication";
+        action = "EditPreviewPost";
+        previousAction = "Edit";
+    }
+    else
+    {
+        ViewData["Title"] = "Create Medication";
+        action = "CreatePreviewPost";
+        previousAction = "Create";
+    }
+}
+
+@section Breadcrumb {
+    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+    <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Medications">Medications</a></li>
+    <li class="breadcrumb-item active">@ViewData["Title"]</li>
+}
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header font-weight-bold">@ViewData["Title"]</div>
+            <div class="card-body">
+                <h1>@Model.Name</h1>
+                <h2>Clinical Condition</h2>
+                <h3>Indication</h3>
+                @Markdown.ParseHtmlString(Model.Indications)
+                <h3>Inclusion Criteria</h3>
+                @Markdown.ParseHtmlString(Model.InclusionCriteria)
+                <h3>Exclusion Criteria</h3>
+                @Markdown.ParseHtmlString(Model.ExclusionCriteria)
+                <h2>Medicine Details</h2>
+                <h3>Name, Form and Strength of Medicine</h3>
+                @Markdown.ParseHtmlString(Model.Form)
+                <h3>Route or Method</h3>
+                @Markdown.ParseHtmlString(Model.Route)
+                <h3>Dosage</h3>
+                @Markdown.ParseHtmlString(Model.Dose)
+                <h3>Side Effects</h3>
+                @Markdown.ParseHtmlString(Model.SideEffects)
+                <h3>Advice to Patient and/or Carer</h3>
+                @Markdown.ParseHtmlString(Model.AdviceIfTaken)
+                <h3>Advice if Patient Declines or is Excluded</h3>
+                @Markdown.ParseHtmlString(Model.AdviceIfDeclined)
+                <h2>Audit Trail</h2>
+                <h3>Records</h3>
+                <p>
+                    All details should be recorded on the Patient Report Form and any adverse reactions reported
+                    via the Incident Management Framework.
+                </p>
+                <form asp-action="@action" asp-route-id="@ViewBag.Id">
+                    <input type="hidden" asp-for="AdviceIfDeclined" />
+                    <input type="hidden" asp-for="AdviceIfTaken" />
+                    <input type="hidden" asp-for="Dose" />
+                    <input type="hidden" asp-for="ExclusionCriteria" />
+                    <input type="hidden" asp-for="Form" />
+                    <input type="hidden" asp-for="InclusionCriteria" />
+                    <input type="hidden" asp-for="Indications" />
+                    <input type="hidden" asp-for="Name" />
+                    <input type="hidden" asp-for="PolicyDate" />
+                    <input type="hidden" asp-for="Route" />
+                    <input type="hidden" asp-for="SideEffects" />
+                    <div class="form-group">
+                        <div class="btn-group">
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                            <a class="btn btn-warning" asp-action="@previousAction" asp-route-id="@ViewBag.Id">Go Back</a>
+                            <a class="btn btn-danger" asp-action="Index">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
