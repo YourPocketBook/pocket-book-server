@@ -20,7 +20,7 @@
     <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
     <meta name="author" content="Łukasz Holeczek">
     <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-    <title>CoreUI Free Bootstrap Admin Template</title>
+    <title>YourPocketBook Administrator Panel - @ViewData["Title"]</title>
     <link rel="apple-touch-icon" sizes="57x57" href="/assets/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/assets/favicon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="/assets/favicon/apple-icon-72x72.png">
@@ -78,7 +78,7 @@
                 </svg>
             </button><a class="c-header-brand d-lg-none" href="#">
                 <svg width="118" height="46" alt="CoreUI Logo">
-                    <use xlink:href="assets/brand/coreui.svg#full"></use>
+                    <use xlink:href="/assets/brand/coreui.svg#full"></use>
                 </svg>
             </a>
             <button class="c-header-toggler c-class-toggler mfs-3 d-md-down-none" type="button" data-target="#sidebar" data-class="c-sidebar-lg-show" responsive="true">
@@ -128,8 +128,15 @@
             </ul>
             <div class="c-subheader px-3">
                 <ol class="breadcrumb border-0 m-0">
-                    <li class="breadcrumb-item">Home</li>
-                    <li class="breadcrumb-item active">Dashboard</li>
+                    @if (IsSectionDefined("Breadcrumb"))
+                    {
+                        @RenderSection("Breadcrumb")
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    }
                 </ol>
             </div>
         </header>
@@ -150,5 +157,7 @@
     <!-- CoreUI and necessary plugins-->
     <script src="/vendors/coreui/js/coreui.bundle.js"></script>
     <script src="/vendors/coreui/utils/coreui-utils.js"></script>
+    <script src="/vendors/jquery/jquery.slim.min.js"></script>
+    @RenderSection("Scripts", false)
 </body>
 </html>
