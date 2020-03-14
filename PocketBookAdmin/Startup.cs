@@ -59,6 +59,8 @@ namespace PocketBookAdmin
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseSession();
+
             app.UseBrowserLink();
 
             app.UseEndpoints(endpoints =>
@@ -73,6 +75,14 @@ namespace PocketBookAdmin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+            services.AddSession(o =>
+            {
+                o.IdleTimeout = TimeSpan.FromSeconds(60);
+                o.Cookie.HttpOnly = true;
+                o.Cookie.IsEssential = true;
+            });
+
             services.AddDataProtection()
                 .SetApplicationName($"pocketbook-admin-{_env.EnvironmentName}")
                 .PersistKeysToFileSystem(new DirectoryInfo($@"{_env.ContentRootPath}\..\local_keys"));
